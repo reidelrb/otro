@@ -146,7 +146,7 @@ a.blog img {
       const loadScript = (s)=>{
         if (!scripts[s]) {
           let b = document.createElement('script')
-          b.src = s + '.js'
+          b.src = 'https://reidelrb.github.io/otro/'+s + '.js'
           b.name = s
           b.onload = function() {
             scripts[this.name] = true
