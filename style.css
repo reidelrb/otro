@@ -1,0 +1,460 @@
+@import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css);@import url(https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@400;900);@import url(https://fonts.googleapis.com/css?family=EB+Garamond%7CWork+Sans:400,700);* {
+  box-sizing: border-box;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  cursor: default
+}
+
+body,html {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden
+}
+
+body {
+  flex: 1 font-family: arial;
+  color: var(--color-font);
+  background: var(--background);
+  font-size: clamp(15px, 5.2vw, 1.9rem)
+}
+
+body>section {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin:0;
+  padding:0
+}
+
+a[me] {
+  margin: .4em;
+  font-size: 2em;
+  font-weight: 900;
+  font-family: arial
+}
+
+a[me] b {
+  background: var(--a);
+  color: #fff;
+  padding: 0 .3em
+}
+
+article :is(a, code, b, figcaption, i, strong) {
+  overflow-wrap: break-word;
+  vertical-align: middle;
+  max-width: 100%;
+  overflow: hidden
+}
+
+a,label,figcaption, i, section>strong {
+  display: inline-block;
+  vertical-align: middle
+}
+
+a {
+  font-size: 1em;
+  color: var(--a);
+  text-decoration: none;
+  font-family: arial
+}
+
+a.open {
+  color: var(--a-open)
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-content: flex-start;
+  margin: auto;
+  width: 100%;
+  padding: 1em 1.4em
+}
+
+article header {
+  padding: .5em .3em 1em;
+  width: 100%;
+  max-width: 25em
+}
+
+article> section{
+    flex: 1
+}
+
+article header>span {
+  margin-bottom: .6em;
+  font-size: .9em;
+  display: block;
+  width: 100%;
+  color: var(--author)
+}
+
+article header nav {
+  font-size: .9em;
+  font-weight: 400;
+  padding: .4em 0;
+  display: flex;
+  align-items: center
+}
+
+header .path {
+  padding: 0 .3em;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap
+}
+
+article header label {
+  display: inline-block;
+  background: red;
+  color: #fff;
+  padding: .2em;
+  border-radius: .1em;
+  font-weight: 900;
+  box-shadow: 0 0 3px #111;
+  white-space: nowrap
+}
+
+h1, h3, h4, p, figure, header, .blog, ul, section>strong {
+  display: block;
+  margin: auto;
+  overflow-wrap: break-word;
+  overflow: hidden
+}
+
+h1{
+  font-size: 1.9em;
+  font-family: asap;
+  line-height: 1.1em;
+  padding: .2em 0;  
+}
+
+header h1 {
+  min-height: 3em;
+  display: flex;
+  align-items: center
+}
+
+figure {
+  width: 100%;
+  margin-bottom: .5em;
+  max-width: 23em
+}
+
+figcaption {
+  padding: .4em;
+  font-size: .8em;
+  font-weight: 400;
+  text-align: center;
+  width: 100%;
+  color: var(--figcaption)
+}
+
+img {
+  width: 100%;
+  display: block;
+  font-size: .5em;
+  min-height: 1em
+}
+
+img[src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="] {
+  aspect-ratio: 6/3;
+  transition: 2s;
+  animation: 1s infinite pulse-c;
+  background-size: 100%;
+  background: var(--lazy);
+  background-repeat: no-repeat
+}
+
+@keyframes pulse-c {
+  0%,100% {
+    background-image: radial-gradient(circle,var(--lazy-img) 20%,transparent 20%)
+  }
+
+  25%,75% {
+    background-image: radial-gradient(circle,var(--lazy-img) 23%,transparent 23%)
+  }
+
+  50% {
+    background-image: radial-gradient(circle,var(--lazy-img) 25%,transparent 25%)
+  }
+}
+
+h3, section>strong {
+  font-size: 1.6em;
+  padding: .1em;
+  font-family: asap;
+  max-width: 14em
+}
+
+h4 {
+  font-size: 1.2em;
+  padding: .1em;
+  font-family: asap;
+  font-weight: 600;
+  max-width: 17em
+}
+
+i {
+  display: block;
+  padding: .2em;
+  margin: 0
+}
+
+p {
+  line-height: 1.3em;
+  font-size: 1em;
+  padding: 0 .2em .5em;
+  margin-bottom: .4em;
+  font-family: arial, EB Garamond;
+  font-weight: 300;
+  max-width: 23em
+}
+
+p b {
+  overflow: auto;
+  display: inline-block;
+  font-weight: 900;
+  font-family: asap;
+  vertical-align: super;
+  font-size: 1em;
+  padding-bottom: 0em
+}
+
+blockquote {
+  overflow-wrap: break-word;
+  position: relative;
+  font-style: italic;
+  border-left: .5em solid #007BFF;
+  padding: 2em .5em;
+  margin: 20px 0;
+  z-index: 1;
+  background-color: var(--blockquote);
+  quotes: "“" "”" "‘" "’"
+}
+
+blockquote i {
+  position: relative;
+  z-index: 4
+}
+
+blockquote::before {
+  content: open-quote;
+  position: absolute;
+  top: 0;
+  left: .5em;
+  z-index: 0;
+  font-size: 3em;
+  color: #007BFF;
+  vertical-align: bottom
+}
+
+blockquote::after {
+  content: close-quote;
+  position: absolute;
+  bottom: -.6em;
+  left: .5em;
+  font-size: 3em;
+  color: #007BFF;
+  vertical-align: middle
+}
+
+pre {
+  background-color: var(--pre);
+  color: #dcdcdc;
+  padding: 20px;
+  margin: .4em auto;
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  box-shadow: 0 0 .5em rgba(0, 0, 0, 0.5)
+}
+
+code {
+  background: var(--code);
+  font-size: .7em;
+  padding: .2em;
+  box-shadow: 0 0 1px var(--color-font)
+}
+
+ul {
+  max-width: 23em;
+  list-style-type: none;
+  padding: .5em;
+  margin: .3em auto
+}
+
+ul li {
+  overflow-wrap: break-word;
+  padding: .6em;
+  margin-bottom: .3em;
+  font-family: asap
+}
+
+ul ul {
+  margin-left: 20px
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: .5em;
+  background: var(--footer);
+  box-shadow: 0 0 1px #333;
+  position: relative;
+  z-index: 20;
+  text-align: center;
+}
+
+footer nav {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center
+}
+
+footer nav a {
+  padding: .2em .6em;
+  font-family: asap
+}
+
+footer .loaded {
+  font-size: .6em
+}
+
+.tab-menu {
+  counter-reset: topic;
+  /* Resetea el contador para los temas */
+  display: block;
+  width: 100%;
+  max-width: 17em;
+  margin: .4em auto;
+  background: var(--background);
+  box-shadow: 0 0 .01em #333;
+  border-radius: .1em;
+  max-height: calc( 100% - 1em);
+  overflow: auto;
+  border-bottom: solid 1px #dcdcdc;
+  z-index: 50
+}
+
+.tab-menu a {
+  display: none;
+  top: 0;
+  width : 100%;
+}
+
+.tab-menu h3 {
+  position: sticky;
+  z-index: 3;
+  background: var(--background);
+  color: var(--figcaption);
+  padding: .4em;
+  top: 0
+}
+
+.tab-menu input:checked ~ a {
+  display: block
+}
+
+.tab-menu a.h3 {
+  counter-increment: topic;
+  /* Incrementa el contador para cada h3 */
+  font-weight: 900;
+  font-size: 1em;
+  padding: .3em 1em
+}
+
+.tab-menu .h3::before {
+  content: counter(topic) ". ";
+  /* Muestra el número del tema antes del texto */
+}
+
+.tab-menu a.h4 {
+  counter-increment: subtopic;
+  /* Incrementa el contador para cada h4 */
+  font-weight: 500;
+  font-size: .8em;
+  padding: .2em 2.5em
+}
+
+.tab-menu .h4::before {
+  content: counter(topic) "." counter(subtopic) " ";
+  /* Muestra el número del tema y subtema antes del texto */
+}
+
+.tab-menu .h3 + .h4 {
+  counter-reset: subtopic;
+  /* Reinicia el contador de subtemas después de un h3 */
+}
+
+article section>h3 {
+  counter-increment: head3;  
+  counter-reset: head4;
+}
+article section>h3:before{
+  content: counter(head3) " ";  
+}
+
+article section>h4 {
+  counter-increment: head4;  
+}
+
+article section>h4:before{
+  content: counter(head3)"." counter(head4) " ";  
+}
+
+.spinner {
+  display: inline-block;
+  margin: auto;
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  border: .5em solid;
+  background: transparent;
+  border-color: #dbdcef dodgerblue #dbdcef #dbdcef;
+  animation: 1s linear infinite spinner-d3wgkg
+}
+
+@keyframes spinner-d3wgkg {
+  to {
+    transform: rotate(1turn)
+  }
+}
+
+@media(min-width: 700px) {
+
+}
+
+:root {
+  --background: #fcfcfc;
+  --color-font: #2a2a2a;
+  --pre: #212d3b;
+  --code: #ececec;
+  --blockquote: #f9f9f9;
+  --lazy: #dcdcdc;
+  --lazy-img: #777;
+  --figcaption: #acacac;
+  --footer: #ececec;
+  --a-open: #acacac;
+  --a: #07D
+}
+
+.dark-css {
+  --background: #212d3b;
+  --color-font: #fff;
+  --pre: #222;
+  --code: #333;
+  --blockquote: rgba(0,0,0,0.1);
+  --lazy: rgba(0,0,0,0.3);
+  --lazy-img: #dcdcdc;
+  --footer: #222;
+  --a: dodgerblue
+}
