@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>me telegraph</title>
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="telegraph.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <style id="noTelegram">
+      body,html,body>section {
+        min-height: 100%;
+        height: 100%;
+        overflow: hidden
+      }
+
+      body>section {
+        overflow: auto
+      }
+
+a.blog {
+  max-width: 20em;
+  padding: .2em;
+  margin: .3em auto;
+  font-size: 1.1em;
+  font-weight: 900;
+  line-height: 1em;
+  display: flex;
+  align-items: center;
+  color: inherit
+}
+
+a.blog img {
+  display: block;
+  margin: 0 1em 0 0;
+  width: 10em;
+  min-width: 10em;
+  aspect-ratio: 1/1;
+  background: var(--lazy);
+  object-fit: cover;
+}
+    </style>
+    <script async psrc="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script src="db.js"></script>
+    <script src="scripts.js"></script>
+    <script>
+      //noTelegram.remove()
+      const serverMode = window.location.pathname.split(/\//)[2] != '404.html';
+
+      const APIURL = (m='')=>{
+        inner(`
+          <div id="loader">
+            <div>
+            <div class="spinner"></div>
+            <br>
+            <h3>${m.split(/\//)[0]}</h3>
+            </div>
+          </div>`)
+        window.location.href = getAPIURL(m)
+      }
+      
+      const setAPIURL =(p)=>{
+        (p||document).querySelectorAll('a[data-href]').forEach(a=>{
+          let u = (a.dataset.href || a.innerHTML);
+          (u == API.method + (API.data?'/'+API.data:'')) && (a.classList.add('open'));
+          a.onclick = function() {
+            event.preventDefault()
+            APIURL(u)
+          }
+        })
+      }
+      const getAPIURL=(m)=>{
+        return (serverMode ? '' : "?path=") + '/' + API.service + '/' + m
+      }
+
+      const inner = (p)=>{
+        document.body.innerHTML = `<section>${p}</section>`
+        setAPIURL()
+      }
+
+      const eCatch = (c=403)=>{
+        let e = {
+          100: {
+            code: '',
+            ms: ''
+          },
+          204: {
+            code: 'Telegraph',
+            ms: 'Error en la respuesta de <a href="">Telegraph</a>'
+          },
+          400: {
+            code: 'Bad Request',
+            ms: 'La URL no es correcta'
+          },
+          401: {
+            code: 'Unauthorized',
+            ms: 'Active un token de telegra.ph para realizar operaciones'
+          },
+          403: {
+            code: 'Forbidden',
+            ms: 'La acción no le está permitida '
+          },
+          404: {
+            code: 'Not Found',
+            ms: 'El recurso solicitado no ha sido encontrado!'
+          },
+          423: {
+            code: 'Locked',
+            ms: 'Tiene cambios sin publicar en el borrador<br><a data-href="editPage/'+API.data+'" class="btn">Editar</a>'
+          },
+          500: {
+            code: 'No get Page',
+            ms: 'Debe usar una página de telegraph válida en la solicitud'
+          },
+          501: {
+            code: 'action '+API.method,
+            ms: 'No se han podido cargar las funciones necesarias'
+          },
+        }[c]
+
+        if (!e) {
+          e = {
+            code: '',
+            ms: c.message || c
+          }
+          c = 'Ups!'
+        }
+
+        inner(`
+          <article>
+            <div id="loader">
+              <div>
+              <h2 class="code">${c}</h2>
+              <h1>${e.code}</h1>
+              <p>${e.ms}</p>
+              </div>
+            </div>
+          </article>
+          <footer>
+            ${footer}
+          </footer>
+        `)
+      }
+
+      let scripts = {}
+      const loadScript = (s)=>{
+        if (!scripts[s]) {
+          let b = document.createElement('script')
+          b.src = s + '.js'
+          b.name = s
+          b.onload = function() {
+            scripts[this.name] = true
+            this.remove()
+          }
+          b.onerror = function() {
+            this.remove()
+            eCatch('501')
+          }
+          document.body.append(b)
+        }
+      }
+
+      window.onload = async()=>{
+        await mydb.put('user', {
+          "name": "karel",
+          "user": "usuariokarel",
+          "token": "9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222",
+          "paths": ["fake"]
+        });
+
+        await (async(a)=>{
+          let e = a.split(/\//)
+          let user = await mydb.get('user')
+          let methods = ['getPage', 'editPage', 'createPage', 'history', 'home', 'welcome']
+          let paths = (user || {}).paths || []
+          API = {
+            href: a,
+            server: serverMode,
+            apihost: 'https://telegra.ph',
+            origin: window.location.hostname,
+            service: e[1] || window.location.href.split('/')[3],
+            method: e[2] || (!user?'welcome':'home'),
+            data: e[3],
+            edit: paths.includes(e[3]),
+            user: user,
+            length: e.length,
+            name: '<a me>reidel<b>Bot</b></a>',
+            ok: (methods.includes(e[2] || 'welcome') && ['localhost', ''].includes(window.location.hostname) && e.length <= 4)
+          }
+
+          footer = `
+        <nav>
+          <!--
+          <a href="http://localhost:8080/telegraph/404.html?path=/telegraph/getPage/usuariokarel-11-05-2">real</a>
+          <a data-href="getPage/Joyride-by-Adam-Melchor-11-08">bot</a>
+          <a data-href="getPage/api.json">Api</a>
+          <a data-href="getPage/fake">Fake</a>
+          <a data-href="editPage/fake">Edit</a>
+          -->
+          
+          <a data-href="home">Home</a>
+          <a data-href="history">Historial</a>
+          ${API.edit? `<a data-href="editPage/${API.data}">editPage</a>` : ''}
+
+        </nav>
+        ${API.name}
+        `
+        }
+        )(serverMode ? window.location.pathname : ((new URLSearchParams(window.location.search)).get('path') || ''));
+
+        console.log(JSON.stringify(API, null, 2))
+        time = new Date().getTime()
+        if (API.ok) {
+          loadScript(API.method)
+        } else {
+          eCatch(400)
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- 
+    https://host.com/getPage
+    https://host.com/
+    http://localhost:8080/telegraph/404.html?path=/telegraph/history
+    https://dc.missuo.ru/file/1303642728499908679?31
+    de6d0ff8a9df98c0ce6e391047eca23170cef108cfb1a2f9cb663e04a0dc
+     -->
+  </body>
+</html>
