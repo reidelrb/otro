@@ -79,10 +79,11 @@
       }
 
       const loadScripts = async(path)=>{
+        const url = API.host + path.toLowerCase()
+        console.log(url)
         return new Promise((resolve,reject)=>{
           const file = path.endsWith('.js') ? 'script' : 'link'
           const e = document.createElement(file)
-          const url = API.host + path.toLowerCase()
           file == 'script' ? e.src = url : (e.rel = "stylesheet",
           e.href = url)
           e.onload = ()=>resolve(true)
