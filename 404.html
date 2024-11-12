@@ -5,7 +5,15 @@
     <meta name="viewport6" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1">
     <title>TELEGRAPH</title>
     <script>
-      alert(window.location.pathname)
+      const api = {}
+      const index = '/git/';
+      ((req)=>{
+        api.host = req.origin+index
+        api.path = req.pathname.replace(index,'').replace('404.html',sessionStorage.getItem('path')||'home' )
+        
+        alert(JSON.stringify(api,null,2))
+      })(window.location)
+    
     </script>
   </head>
   <body>
