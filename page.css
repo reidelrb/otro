@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=EB+Garamond%7CWork+Sans:400,700); @import url(https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@400;900); @import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css); * {
+@import url(https://fonts.googleapis.com/css?family=EB+Garamond%7CWork+Sans:400,700); @import url(https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@400;900); @import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css); /**/
+* {
   box-sizing: border-box;
   user-select: none;
   margin: 0;
@@ -35,7 +36,7 @@ main {
 
 a {
   color: var(--a);
-  margin-right: .5em;
+  margin-right: .1em;
   text-decoration: none
 }
 
@@ -44,9 +45,23 @@ a.open {
   font-weight: 700
 }
 
+.views {
+  background: red;
+  color:#fff;
+  font-size: .7em;
+  border-radius: .1em;
+  padding:.3em .2em;
+  font-weight:900;
+  margin: .2em 0;
+  display: inline-block;
+  vertical-align: middle 
+}
+
 .moreinfo {
-  padding: 1em;
+  padding: 1em .5em;
+  width: 100%;
   text-align: center;
+  font-weight: 200;
   font-size: .7em
 }
 
@@ -54,10 +69,11 @@ a.open {
   position: sticky;
   bottom: 0;
   margin: 0;
+  z-index: 70;
   background: var(--background)
 }
 
-a.blog {
+body a.blog {
   overflow-wrap: anywhere;
   text-overflow: ellipsis;
   position: relative;
@@ -71,12 +87,12 @@ a.blog {
   line-height: 1em;
   display: flex;
   align-items: center;
-  width: calc(100% - 1.5em);
-  border-radius: .2em
+  width: calc(100% - 1em);
+  border-radius: .2em;
 }
 
 a.blog img {
-  display: block;
+  display: inline-block;
   margin: 0 1em 0 0;
   width: 10em;
   min-width: 10em;
@@ -113,7 +129,7 @@ article {
   transition: .6s
 }
 
-article * {
+article :is(a,b,strong,h1,h3,h4,p,i,figcaption) {
   overflow-wrap: anywhere;
   text-overflow: ellipsis
 }
@@ -256,7 +272,9 @@ blockquote::after {
   vertical-align: middle
 }
 
-pre {
+article pre {
+  overflow-wrap: normal !important;
+  text-overflow: initial;
   background-color: var(--pre);
   width: calc( 100% - 1em);
   color: #dcdcdc;
@@ -319,8 +337,8 @@ footer {
 
 .bi-rocket-fill {
   white-space: nowrap;
-  display:inline-block;
-  font-weight:900
+  display: inline-block;
+  font-weight: 900
 }
 
 footer a {
@@ -331,8 +349,9 @@ footer a {
   body {
     font-size: clamp(1px, 5.6vw, 2rem)
   }
+
   footer {
-    font-size:.9em
+    font-size: .9em
   }
 }
 
