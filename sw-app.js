@@ -14,31 +14,30 @@ const NO_CACHE_HOSTS = [
 ];
 
 // Instalar el Service Worker
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll( ['404.html', 'exit.js', 'get.js', 'account.js', 'token.js', 'offline.js', 'edit.js'] );
-    })
-  );
-});
+self.addEventListener('install', (event)=>{
+  event.waitUntil(caches.open(CACHE_NAME).then((cache)=>{
+    return cache.addAll(['404.html', 'exit.js', 'get.js', 'account.js', 'token.js', 'offline.js', 'edit.js']);
+  }
+  ));
+}
+);
 
 // Activar el Service Worker
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((name) => {
-          if (name !== CACHE_NAME) {
-            return caches.delete(name);
-          }
-        })
-      );
-    })
-  );
-});
+self.addEventListener('activate', (event)=>{
+  event.waitUntil(caches.keys().then((cacheNames)=>{
+    return Promise.all(cacheNames.map((name)=>{
+      if (name !== CACHE_NAME) {
+        return caches.delete(name);
+      }
+    }
+    ));
+  }
+  ));
+}
+);
 
 // Manejar las solicitudes
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', (event)=>{
   const url = new URL(event.request.url);
 
   if (url.origin === self.location.origin) {
@@ -48,7 +47,8 @@ self.addEventListener('fetch', (event) => {
     // Solicitudes de otros orígenes
     event.respondWith(handleCrossOriginRequest(event.request, url));
   }
-});
+}
+);
 
 // Función para manejar solicitudes del mismo origen
 async function handleSameOriginRequest(request) {
@@ -56,7 +56,8 @@ async function handleSameOriginRequest(request) {
     // Primero intenta obtener la respuesta de la red
     const networkResponse = await fetch(request);
 
-    if (!networkResponse.ok) throw new Error('Network response was not ok');
+    if (!networkResponse.ok)
+      throw new Error('Network response was not ok');
 
     // Si la respuesta es válida, almacénala en caché
     const cache = await caches.open(CACHE_NAME);
@@ -76,8 +77,10 @@ async function handleSameOriginRequest(request) {
         return caches.match('404.html');
       } else {
         // Si es un archivo JavaScript, devuelve un fragmento de JS que muestra un alert
-        return new Response("/*Empty*/", {
-          headers: { 'Content-Type': 'application/javascript' }
+        return new Response("/*Empty*/",{
+          headers: {
+            'Content-Type': 'application/javascript'
+          }
         });
       }
     }
@@ -92,11 +95,13 @@ async function handleCrossOriginRequest(request, url) {
   } else {
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
-      return cachedResponse; // Devuelve la respuesta en caché
+      return cachedResponse;
+      // Devuelve la respuesta en caché
     } else {
       const networkResponse = await fetch(request);
       const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone()); // Almacena en caché
+      cache.put(request, networkResponse.clone());
+      // Almacena en caché
       return networkResponse;
     }
   }
