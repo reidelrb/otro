@@ -7,11 +7,11 @@
     <title></title>
     <script data-src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>
-      document.title = '/account';
+      const index = '/git/';
+      document.title = index;
       ((n = (new Date).getHours()) > 17 || n < 7) && document.documentElement.classList.toggle("dark-css");
       const api = {}
       fake = 'offline'
-      const index = '/otro/';
       const imgLoad = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
       const imgtext = 'http://png.txt/';
       const miHerramienta = '<span class="bi-rocket-fill">miniGet</span>'
@@ -70,22 +70,28 @@
           let h = a.dataset.href
 
           if (h == 'back') {
+            (api.path==api.back||api.back.split('/')[0]=='edit')&&(api.back='account')
             h = api.back
             a.dataset.href = h
           }
 
           let url = api.host + h
 
-          h == 'terminos' && (url = h)
+          if(['terminos','reload'].includes(h)){url = h}
 
           a.dataset.url = url
           a.onclick = function() {
-            if (this.dataset.url == 'terminos') {
-              alert(terminos)
-            } else {
+            ({
+              terminos:()=>{
+                alert(terminos)
+              },
+              reload:()=>{
+                window.location.reload()
+              }
+            }[this.dataset.url]||(()=>{
               event.preventDefault()
               APIURL(this.dataset.href)
-            }
+            }))();
           }
         }
         )
@@ -315,30 +321,31 @@
 
             views = 0
             try {
-              if( api.accion == 'get' && api.content ){
-                let response = await fetch('https://api.counterapi.dev/v1/prueba/'+ api.content.replace(/\W/gim,'') + (!api.edit&&!sessionStorage.getItem(api.content)?'/up':'') );
-                sessionStorage.setItem(api.content,'2')
+              if (api.accion == 'get' && api.content) {
+                document.body.innerHTML+='<a>Contando visitas</a>'
+                let response = await fetch('https://api.counterapi.dev/v1/prueba/' + api.content.replace(/\W/gim, '') + (!api.edit && !sessionStorage.getItem(api.content) ? '/up' : ''));
+                sessionStorage.setItem(api.content, '2')
                 if (response.ok) {
                   let data = await response.json()
                   views = data.count
-                  console.log(JSON.stringify(data,null,3))
+                  console.log(JSON.stringify(data, null, 3))
                 }
               }
-            }catch(e){
+            } catch (e) {
               console.log('error views')
             }
-            
+
             footer = `
             <footer>
               <a data-href="back" class="bi-arrow-left-square-fill"></a>
-              ${api.user ? `<a data-href="account">Home</a>` : '<a data-href="token">Token</a>'}
+              ${api.user ? `<a data-href="account">Account</a>` : '<a data-href="token">Token</a>'}
               <a data-href="offline">offLine</a>
-              ${api.edit ? `<a data-href="edit/${api.content}">editar</a>` : api.accion == 'get' ? `<a href="javascript:copyTo(window.location.href)">Share</a>` : ''}
-              ${views?'<label class="bi-eye-fill views">'+views+'</label>':''}
+              ${api.edit ? `<a data-href="edit/${api.content}">Editar</a>` : api.accion == 'get' ? `<a href="javascript:copyTo(window.location.href)">Share</a>` : ''}
+              ${views ? '<label class="bi-eye-fill views"> ' + views + '</label>' : ''}
             </footer>
             `
-            
-            document.title = '/'+api.path
+
+            document.title = '/' + (api.content||api.accion)
             offline = await mydb.get('offline') || {}
 
             if (api.accion == 'account' && !api.user) {
@@ -351,7 +358,7 @@
               }, 'Exit', api.host + 'exit');
               console.log('redireccionando...')
               red = document.createElement('a')
-              window.location.href = api.host +api.path+'?iniciado'
+              window.location.href = api.host + api.path + '?iniciado'
               return true
             }
 
