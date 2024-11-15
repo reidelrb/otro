@@ -188,7 +188,7 @@ function domToNode(domNode) {
           t == 'p' && (e.innerHTML = 'Eligendi usu ea, ei Tritani ceteros omnis menandri iriure antiopam. disputandor oportere has. bh vide wisi, pro in.');
           t == 'a' && (e.className = 'blog',
           e.dataset.href = '/web',
-          e.innerHTML = '<img src="img-default.png">Link to other page of telegraph');
+          e.innerHTML = '<img src="' + api.host + 'img-default.png">Link to other page of telegraph');
           return e
         }
         const fin = (f)=>{
@@ -365,7 +365,7 @@ function domToNode(domNode) {
 
     btnSave.onclick = ()=>{
       accion('Publicar los cambios', async()=>{
-        let content = JSON.parse(JSON.stringify(domToNode(document.querySelector('article')).children).replaceAll(api.host + '"img-default.png"', '"' + imgtext + 'Ok"').replaceAll(placeholder('20'), imgtext + 'Ok'))
+        let content = JSON.parse(JSON.stringify(domToNode(document.querySelector('article')).children).replaceAll('"' + api.host + 'img-default.png"', '"' + imgtext + 'Ok"').replaceAll(placeholder('20'), imgtext + 'Ok'))
         console.log(JSON.stringify(content, null, 2))
         if (content.length > 0) {
           const params = new URLSearchParams({
