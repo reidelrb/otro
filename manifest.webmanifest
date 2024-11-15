@@ -1,7 +1,7 @@
 {
   "background_color": "#07D",
   "description":"Administración rápida y simple de la api de telegra.ph",
-  "display":"Standalone",
+  "display":"Minimal-UI",
   "icons": [
     {
       "src": "img-default.png",
