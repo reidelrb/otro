@@ -50,7 +50,7 @@ function nodeToDom(node, parent) {
       throw new Error(500)
     }
 
-    let response = await fetch(['fake', 'api'].includes(api.content) ? api.host+api.content : ('https://api.telegra.ph/getPage/' + api.content + '?return_content=true'));
+    let response = await fetch(['fake', 'api'].includes(api.content) ? api.host + api.content : ('https://api.telegra.ph/getPage/' + api.content + '?return_content=true'));
 
     if (response.ok) {
       data = await response.json()
@@ -70,7 +70,7 @@ function nodeToDom(node, parent) {
       children: data.result.content
     }).innerHTML}</article>`
 
-    let templateSave = (template.replaceAll('src="' + imgLoad + '" data-', '')).replaceAll(imgtext + 'Ok', api.host+'img-default.png')
+    let templateSave = (template.replaceAll('src="' + imgLoad + '" data-', '')).replaceAll(imgtext + 'Ok', api.host + 'img-default.png')
     let getTemp = await mydb.get(api.content)
 
     if (api.edit) {
@@ -110,6 +110,7 @@ function nodeToDom(node, parent) {
             <a data-href="offline"><div class="moreinfo">View offLine</div></a>
             <a data-href="back" class="bi-arrow-left-square-fill"> Back</a>
             ${api.edit ? `<a data-href="edit/${api.content}" class="">Editar</a>` : ''}
+            <a data-href="reload" class="bi-arrow-clockwise"></a>
           </footer>
         `)
       console.log('{offline:true}')
