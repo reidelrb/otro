@@ -13,8 +13,8 @@ function domToNode(domNode) {
       if (!nodeElement.attrs) {
         nodeElement.attrs = {};
       }
-      if(attr.name == 'data-href'&& attr.value.startsWith('get/')){
-        attr.value = attr.value.replace('get','https://telegra.ph')
+      if (attr.name == 'data-href' && attr.value.startsWith('get/')) {
+        attr.value = attr.value.replace('get', 'https://telegra.ph')
       }
       nodeElement.attrs[attr.name.replace('data-', '')] = attr.value;
     }
@@ -48,12 +48,20 @@ function domToNode(domNode) {
       throw new Error(403)
     }
 
+    resultImg = false
+    await loadScripts('searchImage.js')
+    console.log('Editor Activo')
+
+    delete api.user.cx
+    await mydb.put('user', api.user)
+
     inner(`
       <div id="forGale">
         <div id="galeSelect">
           <div class="loadImage">
-            <input id="inputImage" placeholder="Buscador URL" type="url">
+            <input value='4' id="inputImage" placeholder="Buscador URL" type="url">
             <label id="loadImage" class="bi-image"></label>
+            <label id="btnClose" class="bi-x-circle-fill"></label>
           </div>
           <section></section>
         </div>
@@ -81,16 +89,20 @@ function domToNode(domNode) {
     </div>
     `);
 
+    btnClose.onclick = ()=>{
+      forGale.style.opacity = 0
+      forGale.style.zIndex = 0
+    }
     here = galeSelect.querySelector('section')
     loadImage.onclick = ()=>{
       i = inputImage.value
-      inputImage.value = ''
-
+      if (!i) {
+        alert('Introduce una URL válida')
+        return true
+      }
+      espere(true)
       if (i.startsWith('http')) {
-        waitX = document.createElement('div')
-        waitX.innerHTML = '_wait '
-        waitX.className = 'waitX'
-        document.body.append(waitX)
+        inputImage.value = ''
         let x = new Image()
         x.src = i
         x.onload = async function() {
@@ -99,10 +111,13 @@ function domToNode(domNode) {
           await mydb.put('image', image)
           editPage()
           galeria()
+          espere()
+          forGale.style.opacity = 0
+          forGale.style.zIndex = 0
         }
         x.onerror = ()=>{
           alert('Error')
-          waitX.remove()
+          espere()
         }
       } else {
         try {
@@ -113,21 +128,30 @@ function domToNode(domNode) {
       }
     }
     ;
-
-    (galeria = ()=>{
+    (galeria = async()=>{
       here.innerHTML = ''
       for (b in image) {
         v = new Image()
+        v.oncontextmenu = async function() {
+          accion('¿Eliminar de la galería de acceso rápido?', async()=>{
+            delete image[this.dataset.usa]
+            await mydb.put('image', image)
+            galeria()
+          }
+          )
+        }
         v.onclick = function() {
           forGale.style.opacity = 0
           forGale.style.zIndex = 0
           console.log(this.dataset.usa)
           a_select.querySelector('img').src = this.dataset.usa || this.src
+          a_select.querySelector('figcaption').innerHTML = this.alt == 1 ? 'Click to change...' : this.alt
           editPage()
         }
         v.className = "gale"
         v.dataset.src = b
         v.dataset.usa = b
+        v.alt = image[b]
         v.src = imgLoad
         v.loading = "lazy"
         here.prepend(v)
@@ -139,7 +163,7 @@ function domToNode(domNode) {
     btnDescarta.onclick = ()=>{
       accion('Descartar los cambios', async()=>{
         await mydb.delete(api.content)
-        APIURL(api.host + 'get/' + api.content,'get/' + api.content)
+        APIURL('get/' + api.content)
       }
       )
     }
@@ -159,11 +183,11 @@ function domToNode(domNode) {
           let e = document.createElement(t);
           (t == 'h3' || t == 'h4' || t == 'strong') && (e.innerHTML = 'Lorem ipsum');
           t == 'blockquote' && (e.innerHTML = '<i>Lorem ipsum</i>');
-          t == 'figure' && (e.innerHTML = '<img src="img-default.png"><figcaption>click to change</figcaption>');
+          t == 'figure' && (e.innerHTML = '<img src="' + api.host + 'img-default.png"><figcaption>click to change</figcaption>');
           t == 'pre' && (e.innerHTML = 'function name(){\n  //code here\n}');
           t == 'p' && (e.innerHTML = 'Eligendi usu ea, ei Tritani ceteros omnis menandri iriure antiopam. disputandor oportere has. bh vide wisi, pro in.');
           t == 'a' && (e.className = 'blog',
-          e.dataset.href = 'offline',
+          e.dataset.href = '/web',
           e.innerHTML = '<img src="img-default.png">Link to other page of telegraph');
           return e
         }
@@ -287,15 +311,21 @@ function domToNode(domNode) {
               } else {
                 if (t == 'FIGURE') {
                   a_select = this
-                  forGale.style.opacity = 1
-                  forGale.style.zIndex = 20
+                  if (resultImg) {
+                    gs(resultImg)
+                  } else {
+                    espere(true)
+                    forGale.style.opacity = 1
+                    forGale.style.zIndex = 20
+                    espere()
+                  }
                 }
 
                 if (t == 'A' && this.className == 'blog') {
                   let v = '';
                   a_select = this
                   for (b in offline) {
-                    i = (offline[b].img == imgtext + '200' ? 'img-default.png' : offline[b].img) || placeholder('20')
+                    i = (offline[b].img == imgtext + '20' ? api.host + 'img-default.png' : offline[b].img) || api.host + 'img-default.png'
                     v += `<a id="${b}" class="blog" onclick="a_select.dataset.href='get/${b}'; a_select.innerHTML = this.innerHTML ; window['accion' +this.parentNode.parentNode.id].remove();editPage()"><img src="${i}">${offline[b].title}</a>`
                   }
                   alert(v)
@@ -304,7 +334,7 @@ function domToNode(domNode) {
                   } catch (er) {}
                 }
 
-                if (['H1', 'H3', 'H4', 'P', 'I', 'STRONG', 'FIGCAPTION'].includes(t)) {
+                if (['H1', 'H3', 'H4', 'P', 'I', 'STRONG', 'FIGCAPTION', 'PRE'].includes(t)) {
                   this.contentEditable = 'plaintext-only',
                   this.scrollIntoView({
                     behavior: 'smooth'
@@ -335,14 +365,14 @@ function domToNode(domNode) {
 
     btnSave.onclick = ()=>{
       accion('Publicar los cambios', async()=>{
-        let content = JSON.parse(JSON.stringify(domToNode(document.querySelector('article')).children).replaceAll('"img-default.png"', '"' + imgtext + '200"'))
+        let content = JSON.parse(JSON.stringify(domToNode(document.querySelector('article')).children).replaceAll(api.host + '"img-default.png"', '"' + imgtext + 'Ok"').replaceAll(placeholder('20'), imgtext + 'Ok'))
         console.log(JSON.stringify(content, null, 2))
         if (content.length > 0) {
           const params = new URLSearchParams({
             access_token: api.user.token,
             title: document.querySelector('h1').innerText,
             author_name: api.user.author_name,
-            author_url:  'https://rok.com',
+            author_url: 'https://rok.com',
             return_content: false,
             path: api.content,
             content: JSON.stringify(content),
@@ -359,7 +389,7 @@ function domToNode(domNode) {
             if (data.ok) {
               await mydb.delete(api.content)
 
-              APIURL(  api.host+ 'get/' + api.content,'get/' + api.content)
+              APIURL('get/' + api.content)
             } else {
               eCatch(data.error || 'Error inesperado')
             }
@@ -375,7 +405,7 @@ function domToNode(domNode) {
 
     downHtml.onclick = async()=>{
       try {
-        let response = await fetch('page.css');
+        let response = await fetch(api.host + 'page.css');
         let data = await response.text()
         if (response.ok) {
 
@@ -396,7 +426,7 @@ function domToNode(domNode) {
             , o = new Blob([t.trim()],{
             type: "text/html"
           });
-          //l.download = document.querySelector("h1").innerHTML + '.html'
+          l.download = document.querySelector("h1").innerHTML + '.html'
           l.href = URL.createObjectURL(o),
           l.click(),
           URL.revokeObjectURL(l.href)
