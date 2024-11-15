@@ -9,7 +9,10 @@
     let n = 0
     for (var i in offline) {
       n++
-      list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0,3)}">${offline[i].title.slice(0, 50)} ${!(user.paths || []).includes(i) ? `<span data-path="${i}" onclick="hDel(this)" class="bi-trash"></span>` : ''}</a>` + list
+      off = await mydb.get(i)
+      if(off){
+        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0,3)}">${offline[i].title.slice(0, 50)} ${!(user.paths || []).includes(i) ? `<span data-path="${i}" onclick="hDel(this)" class="bi-trash"></span>` : ''}</a>` + list
+      }
     }
 
     hDel = async(o)=>{
