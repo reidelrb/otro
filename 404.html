@@ -2,60 +2,131 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
+    <link rel='manifest' href='./manifest.webmanifest'>
     <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1">
-    <title>TELEGRAPH 2.0</title>
+    <title></title>
+    <script data-src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>
+      document.title = '/account';
       ((n = (new Date).getHours()) > 17 || n < 7) && document.documentElement.classList.toggle("dark-css");
       const api = {}
-      fake = 'account'
+      fake = 'offline'
       const index = '/otro/';
       const imgLoad = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
       const imgtext = 'http://png.txt/';
-      const miHerramienta = '<span class="bi-rocket-fill">GetRocket</span>'
-      scripts = ['get','account','token','offline','edit']
+      const miHerramienta = '<span class="bi-rocket-fill">miniGet</span>'
+      scripts = ['exit', 'get', 'account', 'token', 'offline', 'edit']
+      try {
+        eruda.init()
+      } catch (e) {}
 
-      urls = ()=>{
+      const sw = true
+      mhistory = 1000
+
+      async function SW(url) {
+        if ('serviceWorker'in navigator) {
+
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          if (registrations.length > 0) {
+            for (const registration of registrations) {
+              if (!sw) {
+                await registration.unregister();
+                console.log(`Service Worker desactivado: ${registration.scope}`)
+              } else {
+                console.log(`SW[${registrations.length}]:${registration.scope}`)
+                mhistory = 1
+              }
+            }
+          } else {
+            console.log('No hay Service Workers registrados.');
+            if (sw) {
+              try {
+                await (navigator.serviceWorker && navigator.serviceWorker.register(url + "sw-app.js"));
+                console.log('service worker registrado')
+              } catch (e) {
+                console.log(e.message)
+              }
+            }
+          }
+
+          navigator.serviceWorker.addEventListener('message', (event)=>{
+            if (event.data === 'Service Worker desactivado.') {
+              alert('El Service Worker ha sido desactivado.')
+            } else {
+              if (!event.data.startsWith('Caché')) {
+                console.log('Service-Worker:', event.data)
+              }
+            }
+          }
+          )
+
+        } else {
+          console.log('La API de Service Worker no es compatible con este navegador.');
+        }
+      }
+
+      const urls = ()=>{
         document.querySelectorAll('[data-href]').forEach(a=>{
           let h = a.dataset.href
 
-          if(h=='back'){
+          if (h == 'back') {
             h = api.back
             a.dataset.href = h
           }
-          
-          let url = api.host+h
-          
-          h=='terminos'&&(url=h)
-          
+
+          let url = api.host + h
+
+          h == 'terminos' && (url = h)
+
           a.dataset.url = url
-          a.onclick=function(){
-            if(this.dataset.url=='terminos'){
+          a.onclick = function() {
+            if (this.dataset.url == 'terminos') {
               alert(terminos)
-            }else{
+            } else {
               event.preventDefault()
-              APIURL(this.dataset.url,this.dataset.href)
+              APIURL(this.dataset.href)
             }
           }
-        })
+        }
+        )
       }
-      
-      APIURL=(url,fake)=>{
-        sessionStorage.setItem('path', fake )
-        !api.local&&(history.replaceState(null, document.title, url ))
+
+      APIURL = (fake)=>{
+        sessionStorage.setItem('path', fake)
+        !api.local && (history.replaceState(null, api.action, api.host + fake))
         window.location.reload()
       }
-      
+
+      espere = (t)=>{
+        if (t) {
+          waitX = document.createElement('dialog')
+          waitX.innerHTML = '<div class="spinner"></div>'
+          waitX.className = 'waitX'
+          document.body.append(waitX)
+          waitX.showModal()
+        } else {
+          waitX.remove()
+        }
+      }
+
       const loadScripts = async(path)=>{
-        const url = api.host + path
-        console.log(url)
+        if (path.startsWith('http')) {
+          url = path
+        } else {
+          url = api.host + path
+        }
+        //console.log('load:',url)
         return new Promise((resolve,reject)=>{
           const file = path.endsWith('.js') ? 'script' : 'link'
           const e = document.createElement(file)
-          file == 'script' ? e.src = url : (e.rel = "stylesheet",e.href = url)
+          file == 'script' ? e.src = url : (e.rel = "stylesheet",
+          e.href = url)
+
           e.onload = ()=>resolve(true)
           e.onerror = ()=>resolve(false)
           document.head.append(e)
-        })
+        }
+        )
       }
       const eCatch = (c=403)=>{
         let e = {
@@ -85,7 +156,7 @@
           },
           423: {
             code: 'Locked',
-            ms: 'Tiene cambios sin publicar en el borrador <a class="btn" data-href="edit/'+api.content+'">Editar</a>'
+            ms: 'Tiene cambios sin publicar en el borrador <a class="btn" data-href="edit/' + api.content + '">Editar</a>'
           },
           500: {
             code: 'No get Page',
@@ -103,7 +174,7 @@
           }
           c = 'Ups!'
         }
-        document.body.innerHTML= `
+        document.body.innerHTML = `
           <server>
             <h1>Error ${c}</h1>
             <h3>${e.code}</h3>
@@ -128,13 +199,16 @@
                   n.src = realSrc
                   n.onload = ()=>resolve(realSrc)
                   n.onerror = ()=>resolve(placeholder('404'))
-                })
-              })()
+                }
+                )
+              }
+              )()
               entry.target.dataset.src = ''
             }
             observer.unobserve(entry.target);
           }
-        })
+        }
+        )
       }
       const observer = new IntersectionObserver(handleIntersection);
       placeholder = (text)=>{
@@ -153,12 +227,15 @@
         return x
       }
       const inner = (d,p)=>{
-        document.body.innerHTML = '<main>' + d.replaceAll('[miHerramienta]', miHerramienta) + '</main>'
+        document.body.innerHTML = '<main>' + addName(d) + '</main>'
         urls()
         loadImages()
-        console.log(document.body.innerHTML)
+        //console.log(document.body.innerHTML)
       }
-      const wait =()=>{
+      const addName = (e)=>{
+        return e.replaceAll('[miHerramienta]', miHerramienta)
+      }
+      const wait = ()=>{
         document.body.innerHTML = '<div class="spinner"></div>'
       }
       loadImages = ()=>{
@@ -207,67 +284,94 @@
       }
       window.alert = accion
 
-
-
-
-
-
-      window.addEventListener('load',async()=>{
+      window.addEventListener('load', async()=>{
         (async(req)=>{
-          try{
-            api.host = req.origin+index
-            api.path = req.pathname.replace(index,'').replace('404.html',sessionStorage.getItem('path')||fake)
-            api.local = req.hostname=='localhost'
+          try {
+            api.url = ((window.location.href).split('?')[0]).split('#')[0]
+            api.host = req.origin + index
+            api.path = req.pathname.replace(index, '').replace('404.html', sessionStorage.getItem('path') || fake)
+            api.local = api.url.replace(api.host, '') == '404.html'
 
             const userAgent = navigator.userAgent;
             api.platform = (userAgent.match(/Android/i) || userAgent.match(/iPhone/i) || userAgent.match(/Windows/i) || ['Unknown'])[0]
 
-            api.accion = api.path.split('/')[0]||'error'
-            api.content = api.path.split('/')[1]||null
+            api.accion = api.path.split('/')[0] || 'error'
+            api.content = api.path.split('/')[1] || null
+
+            await SW(api.host)
 
             api.back = sessionStorage.getItem('back') || api.path
             sessionStorage.setItem('back', api.path)
 
-            if( !(await loadScripts('mydb.js')) || !(await loadScripts('page.css')) || !(await loadScripts('app.css')) ){
-                throw new Error(501)
-            }
+            await loadScripts('page.css')
+            await loadScripts('app.css')
+            await loadScripts('mydb.js')
 
             api.user = await mydb.get('user')
-            api.edit = (api.user&&api.user.paths&&api.user.paths.includes(api.content))
+            api.edit = (api.user && api.user.paths && api.user.paths.includes(api.content))
 
             api.ok = (scripts.includes(api.accion))
             image = await mydb.get('image') || {}
-        
-            console.log(JSON.stringify(api,null,2))
 
-
+            views = 0
+            try {
+              if( api.accion == 'get' && api.content ){
+                let response = await fetch('https://api.counterapi.dev/v1/prueba/'+ api.content.replace(/\W/gim,'') + (!api.edit&&!sessionStorage.getItem(api.content)?'/up':'') );
+                sessionStorage.setItem(api.content,'2')
+                if (response.ok) {
+                  let data = await response.json()
+                  views = data.count
+                  console.log(JSON.stringify(data,null,3))
+                }
+              }
+            }catch(e){
+              console.log('error views')
+            }
+            
             footer = `
             <footer>
-              <a data-href="back" class="bi-arrow-left-square-fill"> </a>
+              <a data-href="back" class="bi-arrow-left-square-fill"></a>
               ${api.user ? `<a data-href="account">Home</a>` : '<a data-href="token">Token</a>'}
               <a data-href="offline">offLine</a>
               ${api.edit ? `<a data-href="edit/${api.content}">editar</a>` : api.accion == 'get' ? `<a href="javascript:copyTo(window.location.href)">Share</a>` : ''}
+              ${views?'<label class="bi-eye-fill views">'+views+'</label>':''}
             </footer>
             `
-
-
-            offline = await mydb.get('offline') || {}
             
-            if(api.accion=='account'&&!api.user){
+            document.title = '/'+api.path
+            offline = await mydb.get('offline') || {}
+
+            if (api.accion == 'account' && !api.user) {
               api.accion = 'token'
             }
 
-            if(api.ok){
-              let ok = await loadScripts(api.accion+'.js')
-              if(!ok){
+            if (history.length == mhistory) {
+              history.pushState({
+                page: '1'
+              }, 'Exit', api.host + 'exit');
+              console.log('redireccionando...')
+              red = document.createElement('a')
+              window.location.href = api.host +api.path+'?iniciado'
+              return true
+            }
+
+            if (api.ok) {
+              console.log('Solicitud api:\n', JSON.stringify(api, null, 2))
+              console.log('Respuesta api: ', api.accion)
+              let ok = await loadScripts(api.accion + '.js')
+              if (!ok) {
                 throw new Error(501)
               }
-            }else{
+            } else {
               throw new Error(403)
             }
-          }catch(e){eCatch(e.message)}
-        })(window.location)
-      })
+          } catch (e) {
+            eCatch(e.message)
+          }
+        }
+        )(window.location)
+      }
+      )
       const terminos = `
       <h1 style="width:100%">[miHerramienta]</h1><p>
       <strong> Lea detenidamente</strong>
@@ -290,21 +394,10 @@
       </p>
       `
     </script>
-    <style>
-      server {
-        margin:auto;
-        width:100%;
-        text-align: center;
-        padding: 1em
-      }
-      server>*{
-        width:100%
-      }
-    </style>
   </head>
   <body>
     <div class="spinner"></div>
-  <!-- 
+    <!-- 
     karel 9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222
     Telegraph d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722
     new 3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b
