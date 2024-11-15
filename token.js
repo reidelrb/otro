@@ -2,11 +2,11 @@
   try {
 
     if (api.user) {
-      document.body.innerHTML =`
+      document.body.innerHTML = addName(`
           <server>
             <div>
-              <h1>Cerrar</h1>
-              <p>Guarde su link de activación en un lugar seguro para iniciar sesión nuevamente <b onclick="copyTo(api.host+'token/'+api.user.token)">CopyLink</b></p>
+              <a data-href="account"><h1>[miHerramienta]</h1></a>
+              <p>${api.user.short_name} Guarde su link de activación en un lugar seguro para iniciar sesión nuevamente <b onclick="copyTo(api.host+'token/'+api.user.token)">CopyLink</b></p>
               <button onclick="(async()=>{await mydb.delete('user') ;window.location.reload()})() ">Cerrar sesión</button>
               <button onclick="copyTo(api.user.token)">CopyToken</button>
             </div>
@@ -15,11 +15,11 @@
         <a data-href="account">Account</a>
         <a data-href="offline">offLine</a>
       </div>
-      `
+      `)
       urls()
     } else {
       if (api.content) {
- 
+
         try {
           let response = await fetch('https://api.telegra.ph/getAccountInfo?access_token=' + api.content + '&fields=["short_name","author_name","author_url","page_count"]');
           if (response.ok) {
@@ -31,6 +31,7 @@
                 token: api.content
               })
               window.location.reload()
+              APIURL('account')
             } else {
               throw new Error(data.error)
             }
@@ -42,10 +43,10 @@
         }
 
       } else {
-        document.body.innerHTML = `
+        document.body.innerHTML = addName(`
           <server>
             <div>
-              <h1>newToken</h1>
+              <a data-href="account"><h1>[miHerramienta]</h1></a>
               <p>
                 El token de <a href="//telegra.ph">telegraph</a> es como una llave que te identifica 
                 como el dueño de la cuenta para crear y editar contenido
@@ -58,7 +59,7 @@
         <a data-href="terminos">Terminos</a>
         <a data-href="offline">offLine</a>
       </div>
-        `
+        `)
         urls()
         crear.onclick = async()=>{
           if (condiciones.checked) {
@@ -73,7 +74,7 @@
                   await mydb.put('user', {
                     token: data.result.access_token
                   })
-                  window.location.reload()
+                  APIURL('account')
                 } else {
                   throw new Error(data.error)
                 }
@@ -93,4 +94,5 @@
   } catch (err) {
     eCatch(err.message)
   }
-})()
+}
+)()
