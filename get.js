@@ -17,7 +17,7 @@ function nodeToDom(node, parent) {
         if (name == 'href' && value.startsWith('/')) {
           domNode.className = 'blog'
           name = 'data-href'
-          value = 'get'+value
+          value = 'get' + value
         }
 
         domNode.setAttribute(name, value);
@@ -42,7 +42,7 @@ function nodeToDom(node, parent) {
 }
 
 (async()=>{
-  const credito = `<div class="moreinfo"> Página de <a href="//telegra.ph">Telegraph</a> generada en <a data-href="terminos">[miHerramienta] </a> </div> `
+  const credito = `<div class="moreinfo"> Página de <a href="//telegra.ph/${api.content}">Telegraph</a> vista en <a data-href="terminos">[miHerramienta] </a> </div> `
   try {
 
     if (!api.content) {
@@ -50,8 +50,7 @@ function nodeToDom(node, parent) {
       throw new Error(500)
     }
 
-
-    let response = await fetch(['fake', 'api'].includes(api.content) ? api.content : ('https://api.telegra.ph/getPage/' + api.content + '?return_content=true'));
+    let response = await fetch(['fake', 'api'].includes(api.content) ? api.host+api.content : ('https://api.telegra.ph/getPage/' + api.content + '?return_content=true'));
 
     if (response.ok) {
       data = await response.json()
@@ -63,53 +62,60 @@ function nodeToDom(node, parent) {
           throw new Error(204)
         }
       }
-   }else{
-     throw new Error(404)
-   }
+    } else {
+      throw new Error(404)
+    }
 
+    let template = `<header><h1>${data.result.title}</h1><nav><a href="javascript:copyTo( window.location.href  )" class="bi-link-45deg"> ${data.result.path}</a><p>${data.result.author_name || 'Vista desde [miHerramienta]'}</p></nav></header><article>${nodeToDom({
+      children: data.result.content
+    }).innerHTML}</article>`
 
+    let templateSave = (template.replaceAll('src="' + imgLoad + '" data-', '')).replaceAll(imgtext + 'Ok', api.host+'img-default.png')
+    let getTemp = await mydb.get(api.content)
 
-   let template = `<header><h1>${data.result.title}</h1><nav><a href="javascript:copyTo( window.location.href  )" class="bi-link-45deg"> ${data.result.path}</a><p>${data.result.author_name || 'Vista desde [miHerramienta]'}</p></nav></header><article>${nodeToDom({
-        children: data.result.content
-      }).innerHTML}</article>`
-   
-   let templateSave = template.replaceAll('src="' + imgLoad + '" data-', '')
-   let getTemp = await mydb.get(api.content)
-
-   if (api.edit) {
-     if (templateSave == getTemp || !getTemp) {
+    if (api.edit) {
+      if (templateSave == getTemp || !getTemp) {
         await mydb.put(api.content, templateSave)
         console.log('iguales')
-     } else {
+      } else {
         throw new Error(423)
-     }
-   } else {
-     await mydb.put(api.content, templateSave)
-   }
+      }
+    } else {
+      await mydb.put(api.content, templateSave)
+    }
 
-   inner(template + credito +footer)
+    inner(template + credito + footer)
 
-   delete offline[ api.content ];
-   offline[ api.content ] = {
-     title: data.result.title.slice(0, 45),
-     img: data.result.image_url
-   }
-   await mydb.put('offline', offline)
+    imgs = document.querySelectorAll('img')
+    imgs.forEach(async(f,n)=>{
+      if (f.dataset.src && (f.dataset.src).startsWith('http') && !(f.dataset.src).startsWith(imgtext)) {
+        image[f.dataset.src] = 1
+      }
+    }
+    )
+    await mydb.put('image', image)
 
+    delete offline[api.content];
+    offline[api.content] = {
+      title: data.result.title.slice(0, 45),
+      img: data.result.image_url
+    }
+    await mydb.put('offline', offline)
 
-
-  }catch(e){
+  } catch (e) {
     let record = await mydb.get(api.content)
-    if(e.message=='Failed to fetch'&&record){
-      inner(record+credito+`
+    if (e.message == 'Failed to fetch' && record) {
+      inner(record + credito + `
           <footer>
             <a data-href="offline"><div class="moreinfo">View offLine</div></a>
             <a data-href="back" class="bi-arrow-left-square-fill"> Back</a>
             ${api.edit ? `<a data-href="edit/${api.content}" class="">Editar</a>` : ''}
           </footer>
         `)
-    }else{
+      console.log('{offline:true}')
+    } else {
       eCatch(e.message)
     }
   }
-})()
+}
+)()
