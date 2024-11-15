@@ -1,4 +1,3 @@
-console.log('base de datos activa')
 class SimpleIndexedDB {
   constructor(dbName, storeName) {
     this.dbName = dbName;
