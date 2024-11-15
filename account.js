@@ -59,7 +59,7 @@
     for (var i in offline) {
       if ((user.paths || []).includes(i)) {
         n++
-        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || 'http://png.txt/' + offline[i].title[0]}">${offline[i].title.slice(0, 50)}</a>` + list
+        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0,3)}">${offline[i].title.slice(0, 50)}</a>` + list
       }
     }
 
