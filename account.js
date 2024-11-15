@@ -8,7 +8,6 @@
 
     const user = api.user
 
-
     timeGet = sessionStorage.getItem('timeGet')
     if (!timeGet || Number(timeGet) < 0) {
       try {
@@ -55,8 +54,6 @@
       sessionStorage.setItem('timeGet', Number(timeGet) - 1)
     }
 
-
-
     let list = ''
     let n = 0
     for (var i in offline) {
@@ -77,17 +74,16 @@
       </header>
       <article>
         <strong>allPage ${n}/100</strong>
+        <p>by ${user.short_name}</p>
         ${list}
       </article>
-      <div class="moreinfo">
-        <a data-href="get/Gay-man-11-12">Other</a>
+      <div class="moreinfo sticky">
+        <a data-href="get/ramirolopez-10-30-131">Other</a>
         <a data-href="token/9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222">karel</a>
         <a data-href="token/d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722">Sandbox</a>
         <a data-href="token/3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b">New</a>
       </div>
     `)
-
-
 
     crear.onclick = async()=>{
       accion('Crear una nueva página en telegra.ph con [miHerramienta]', async()=>{
@@ -107,12 +103,14 @@
         } catch (err) {
           eCatch(err.message)
         }
-      })
+      }
+      )
     }
 
     n >= 100 && (crear.remove())
 
-
-
-  }catch(e){eCatch(e.message)}
-})()
+  } catch (e) {
+    eCatch(e.message)
+  }
+}
+)()
