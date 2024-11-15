@@ -21,12 +21,14 @@
         delete offline[path]
         await mydb.put('offline', offline)
         await mydb.delete(path)
-      })
+      }
+      )
     }
 
     inner(`
       <header static>
        <h1><a data-href="account" class="bi-arrow-left-square-fill"> offline</a></h1>
+       <p>Páginas visitadas pare ver sin conexión</p>
       </header>
       <article>
         ${list}
@@ -36,4 +38,5 @@
   } catch (err) {
     eCatch(err.message)
   }
-})()
+}
+)()
