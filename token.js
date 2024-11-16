@@ -65,7 +65,7 @@
           if (condiciones.checked) {
             try {
               wait()
-              let response = await fetch('https://api.telegra.ph/createAccount?short_name=' + gtk('xxxxxx') + '&author_name=Creado desde [miHerramienta] para telegra.ph');
+              let response = await fetch('https://api.telegra.ph/createAccount?short_name=' + gtk('Linkxxxxx') + '&author_name=Creado desde [miHerramienta] con la api de telegra.ph');
               if (response.ok) {
                 let data = await response.json()
                 console.log(JSON.stringify(data, null, 3))
