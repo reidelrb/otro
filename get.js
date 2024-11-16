@@ -66,7 +66,7 @@ function nodeToDom(node, parent) {
       throw new Error(404)
     }
 
-    let template = `<header><h1>${data.result.title}</h1><nav><a href="javascript:copyTo( window.location.href  )" class="bi-link-45deg"> ${data.result.path}</a><p>${data.result.author_name || 'Vista desde [miHerramienta]'}</p></nav></header><article>${nodeToDom({
+    let template = `<header><h1>${data.result.title}</h1><nav><p>${data.result.author_name || 'Vista desde [miHerramienta]'}</p><a href="javascript:copyTo( api.host+'get/'+data.result.path )" class="bi-link-45deg">Compartir artículo</a></nav></header><article>${nodeToDom({
       children: data.result.content
     }).innerHTML}</article>`
 
