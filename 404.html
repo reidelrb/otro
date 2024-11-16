@@ -8,7 +8,7 @@
     <script>
       const index = '/otro/';
       document.title = index;
-      ((n = (new Date).getHours()) > 17 || n < 7) && document.documentElement.classList.toggle("dark-css");
+      //((n = (new Date).getHours()) > 17 || n < 7) && document.documentElement.classList.toggle("dark-css");
       const api = {}
       fake = 'offline'
       const imgLoad = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
@@ -20,7 +20,7 @@
       } catch (e) {}
 
       const sw = true
-      mhistory = 1000
+      let worker = false
 
       async function SW(url) {
         if ('serviceWorker'in navigator) {
@@ -33,7 +33,7 @@
                 console.log(`Service Worker desactivado: ${registration.scope}`)
               } else {
                 console.log(`SW[${registrations.length}]:${registration.scope}`)
-                mhistory = 1
+                worker = true
               }
             }
           } else {
@@ -42,6 +42,7 @@
               try {
                 await (navigator.serviceWorker && navigator.serviceWorker.register(url + "sw-app.js"));
                 console.log('service worker registrado')
+                worker = true
               } catch (e) {
                 console.log(e.message)
               }
@@ -350,14 +351,14 @@
             if (api.accion == 'account' && !api.user) {
               api.accion = 'token'
             }
-
-            if (history.length == mhistory) {
+            console.log(window.location.pathname)
+            if (worker && window.location.pathname.startsWith(index+'404.html')) {
               history.pushState({
                 page: '1'
               }, 'Exit', api.host + 'exit');
               console.log('redireccionando...')
               red = document.createElement('a')
-              window.location.href = api.host + api.path + '?iniciado'
+              window.location.href = api.host + api.path
               return true
             }    
 
