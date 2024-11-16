@@ -10,8 +10,8 @@
     for (var i in offline) {
       n++
       off = await mydb.get(i)
-      if(off){
-        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0,3)}">${offline[i].title.slice(0, 50)} ${!(user.paths || []).includes(i) ? `<span data-path="${i}" onclick="hDel(this)" class="bi-trash"></span>` : ''}</a>` + list
+      if (off && i!='miniblog-11-16') {
+        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0, 3)}">${offline[i].title.slice(0, 50)} ${!(user.paths || []).includes(i) ? `<span data-path="${i}" onclick="hDel(this)" class="bi-trash"></span>` : ''}</a>` + list
       }
     }
 
@@ -37,7 +37,6 @@
         ${list}
       </article>
     `)
-    
 
   } catch (err) {
     eCatch(err.message)
