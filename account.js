@@ -78,10 +78,7 @@
         ${list}
       </article>
       <div class="moreinfo sticky">
-        <a data-href="get/ramirolopez-10-30-131">Other</a>
-        <a data-href="token/9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222">karel</a>
-        <a data-href="token/d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722">Sandbox</a>
-        <a data-href="token/3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b">New</a>
+        <a href="${api.host}404.html">Actualizar</a>
       </div>
     `)
 
