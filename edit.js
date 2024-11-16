@@ -59,7 +59,7 @@ function domToNode(domNode) {
       <div id="forGale">
         <div id="galeSelect">
           <div class="loadImage">
-            <input value='4' id="inputImage" placeholder="Buscador URL" type="url">
+            <input id="inputImage" placeholder="Buscador URL" type="url">
             <label id="loadImage" class="bi-image"></label>
             <label id="btnClose" class="bi-x-circle-fill"></label>
           </div>
