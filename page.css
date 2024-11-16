@@ -121,6 +121,10 @@ header p {
   color: #acacac
 }
 
+header .bi-link-45deg {
+  font-weight:800
+}
+
 article {
   flex: 1;
   max-width: 30em;
