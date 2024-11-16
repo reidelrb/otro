@@ -2,10 +2,9 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
-    <link rel='manifest' href='./manifest.webmanifest'>
+    <link rel='manifest' href=".\manifest.webmanifest">
     <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1">
     <title></title>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>
       const index = '/otro/';
       document.title = index;
@@ -236,7 +235,6 @@
         document.body.innerHTML = '<main>' + addName(d) + '</main>'
         urls()
         loadImages()
-        //console.log(document.body.innerHTML)
       }
       const addName = (e)=>{
         return e.replaceAll('[miHerramienta]', miHerramienta)
@@ -346,6 +344,7 @@
             `
 
             document.title = '/' + (api.content||api.accion)
+            document.querySelector('link[rel="manifest"]').href = api.host +'manifest.webmanifest'
             offline = await mydb.get('offline') || {}
 
             if (api.accion == 'account' && !api.user) {
@@ -360,7 +359,8 @@
               red = document.createElement('a')
               window.location.href = api.host + api.path + '?iniciado'
               return true
-            }
+            }    
+
 
             if (api.ok) {
               console.log('Solicitud api:\n', JSON.stringify(api, null, 2))
@@ -400,14 +400,36 @@
       Al utilizar [miHerramienta], confirmas que has leído, comprendido y aceptas estos términos y condiciones
       </p>
       `
+
+
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e)=>{
+        e.preventDefault();
+        deferredPrompt = e;
+        btn = document.createElement('install')
+        btn.onclick=()=>{
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult)=>{
+                  if (choiceResult.outcome === 'accepted') {
+                    console.log('User prompt')
+                  } else {
+                    console.log('User prompt')
+                  }
+                  deferredPrompt = null;
+                });
+        }
+        btn.innerHTML = ' Install'
+        btn.className = 'bi-android2'
+        document.body.append(btn)
+      });
     </script>
   </head>
   <body>
     <div class="spinner"></div>
     <!-- 
-    karel 9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222
-    Telegraph d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722
-    new 3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b
+    http://localhost:8080/git/token/9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222
+    http://localhost:8080/git/token/d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722
+    http://localhost:8080/git/token/3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b
      -->
   </body>
 </html>
