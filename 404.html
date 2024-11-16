@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1">
     <title></title>
     <script>
-      const index = '/otro/';
-      document.title = index;
+      const version = '1.2.3'
+      const miHerramienta = '<span class="bi-rocket-fill">GetBlog</span>'
+      const index = document.title = '/' + window.location.pathname.split('/')[1] + '/';
       //((n = (new Date).getHours()) > 17 || n < 7) && document.documentElement.classList.toggle("dark-css");
       const api = {}
       fake = 'offline'
       const imgLoad = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
       const imgtext = 'http://png.txt/';
-      const miHerramienta = '<span class="bi-rocket-fill">miniGet</span>'
       scripts = ['exit', 'get', 'account', 'token', 'offline', 'edit']
       try {
         eruda.init()
@@ -70,28 +70,32 @@
           let h = a.dataset.href
 
           if (h == 'back') {
-            (api.path==api.back||api.back.split('/')[0]=='edit')&&(api.back='account')
+            (api.path == api.back || api.back.split('/')[0] == 'edit') && (api.back = 'account')
             h = api.back
             a.dataset.href = h
           }
 
           let url = api.host + h
 
-          if(['terminos','reload'].includes(h)){url = h}
+          if (['terminos', 'reload'].includes(h)) {
+            url = h
+          }
 
           a.dataset.url = url
           a.onclick = function() {
             ({
-              terminos:()=>{
+              terminos: ()=>{
                 alert(terminos)
-              },
-              reload:()=>{
+              }
+              ,
+              reload: ()=>{
                 window.location.reload()
               }
-            }[this.dataset.url]||(()=>{
+            }[this.dataset.url] || (()=>{
               event.preventDefault()
               APIURL(this.dataset.href)
-            }))();
+            }
+            ))();
           }
         }
         )
@@ -178,7 +182,7 @@
             code: '',
             ms: c.message || c
           }
-          c = 'Ups!'
+          c = '!!!!'
         }
         document.body.innerHTML = `
           <server>
@@ -224,7 +228,7 @@
         i.height = 200,
         $.fillStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--lazy') || "#0001",
         $.fillRect(0, 0, i.width, i.height),
-        $.font = "900 90px arial",
+        $.font = "900 90px Ubuntu",
         $.fillStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--color-font') || "#acacac",
         $.textAlign = "center",
         $.textBaseline = "middle",
@@ -244,6 +248,13 @@
         document.body.innerHTML = '<div class="spinner"></div>'
       }
       loadImages = ()=>{
+        const imagesFailed = document.querySelectorAll('img').forEach(i=>{
+          if(!i.dataset.src){
+            i.onerror = function(){
+              this.src = placeholder('Error')
+            }
+          }
+        });
         const images = document.querySelectorAll('img[data-src]');
         images.forEach(image=>observer.observe(image));
       }
@@ -302,6 +313,10 @@
 
             api.accion = api.path.split('/')[0] || 'error'
             api.content = api.path.split('/')[1] || null
+            if(api.accion.startsWith('blog-')){
+              api.content = api.accion
+              api.accion ='get'
+            }
 
             await SW(api.host)
 
@@ -321,7 +336,7 @@
             views = 0
             try {
               if (api.accion == 'get' && api.content) {
-                document.body.innerHTML+='<a>Contando visitas</a>'
+                document.body.innerHTML += '<a>Contando visitas</a>'
                 let response = await fetch('https://api.counterapi.dev/v1/prueba/' + api.content.replace(/\W/gim, '') + (!api.edit && !sessionStorage.getItem(api.content) ? '/up' : ''));
                 sessionStorage.setItem(api.content, '2')
                 if (response.ok) {
@@ -344,15 +359,15 @@
             </footer>
             `
 
-            document.title = '/' + (api.content||api.accion)
-            document.querySelector('link[rel="manifest"]').href = api.host +'manifest.webmanifest'
+            document.title = '/' + (api.content || api.accion)
+            document.querySelector('link[rel="manifest"]').href = api.host + 'manifest.webmanifest'
             offline = await mydb.get('offline') || {}
 
             if (api.accion == 'account' && !api.user) {
               api.accion = 'token'
             }
             console.log(window.location.pathname)
-            if (worker && window.location.pathname.startsWith(index+'404.html')) {
+            if (worker && window.location.pathname.startsWith(index + '404.html')) {
               history.pushState({
                 page: '1'
               }, 'Exit', api.host + 'exit');
@@ -360,8 +375,7 @@
               red = document.createElement('a')
               window.location.href = api.host + api.path
               return true
-            }    
-
+            }
 
             if (api.ok) {
               console.log('Solicitud api:\n', JSON.stringify(api, null, 2))
@@ -402,32 +416,35 @@
       </p>
       `
 
-
       let deferredPrompt;
       window.addEventListener('beforeinstallprompt', (e)=>{
         e.preventDefault();
         deferredPrompt = e;
         btn = document.createElement('install')
-        btn.onclick=()=>{
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult)=>{
-                  if (choiceResult.outcome === 'accepted') {
-                    console.log('User prompt')
-                  } else {
-                    console.log('User prompt')
-                  }
-                  deferredPrompt = null;
-                });
+        btn.onclick = ()=>{
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult)=>{
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User prompt')
+            } else {
+              console.log('User prompt')
+            }
+            deferredPrompt = null;
+          }
+          );
         }
         btn.innerHTML = ' Install'
         btn.className = 'bi-android2'
         document.body.append(btn)
-      });
+      }
+      );
     </script>
   </head>
   <body>
     <div class="spinner"></div>
     <!-- 
+    http://localhost:8080/git/token/9989c304cf053ad3a8a53ab2e449cce918a83a0a3088dd13694ce5682c12
+    
     http://localhost:8080/git/token/9e44a995c56d3d8aa2dc48b1ff8de5f9e5a243796a0907a35d9dc0fa1222
     http://localhost:8080/git/token/d3b25feccb89e508a9114afb82aa421fe2a9712b963b387cc5ad71e58722
     http://localhost:8080/git/token/3864e7bf19fff62f7e56b10d4aad22872e7ec981d1725bbb1e33218bfd9b
