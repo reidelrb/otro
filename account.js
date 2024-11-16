@@ -5,9 +5,7 @@
       /* no tiene cuenta */
       throw new Error(401)
     }
-
     const user = api.user
-
     timeGet = sessionStorage.getItem('timeGet')
     if (!timeGet || Number(timeGet) < 0) {
       try {
@@ -59,7 +57,7 @@
     for (var i in offline) {
       if ((user.paths || []).includes(i)) {
         n++
-        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0,3)}">${offline[i].title.slice(0, 50)}</a>` + list
+        list = `<a data-href="get/${i}" class="blog"><img src="${imgLoad}" data-src="${offline[i].img || imgtext + offline[i].title.slice(0, 3)}">${offline[i].title.slice(0, 50)}</a>` + list
       }
     }
 
@@ -69,7 +67,8 @@
         <nav>
           <button id="crear">NewPage</button>
           <a data-href="offline">offline</a>
-          <a data-href="token">token</a>
+          <a data-href="get/miniblog-11-16">Blog</a>
+          <a data-href="token">Login</a>
         </nav>
       </header>
       <article>
@@ -77,8 +76,8 @@
         <p>by ${user.short_name}</p>
         ${list}
       </article>
-      <div class="moreinfo sticky">
-        <a href="${api.host}404.html">Actualizar</a>
+      <div class="moreinfo">
+        <a href="${api.host}404.html">Actualizar version ${version}</a>
       </div>
     `)
 
@@ -86,7 +85,7 @@
       accion('Crear una nueva página en telegra.ph con [miHerramienta]', async()=>{
         wait()
         try {
-          let response = await fetch('https://api.telegra.ph/createPage?access_token=' + api.user.token + '&title=' + (api.user.short_name.toLowerCase()) + '&author_name=' + api.user.author_name + '&content=[{"tag":"p","children":["Hello,+world!"]}]&return_content=true')
+          let response = await fetch('https://api.telegra.ph/createPage?access_token=' + api.user.token + '&title=' + 'blog' + '&author_name=' + api.user.author_name + '&content=[{"tag":"p","children":["Hello,+world!"]}]&return_content=true')
           if (response.ok) {
             let data = await response.json()
             console.log(JSON.stringify(data, null, 3))
